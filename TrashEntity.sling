@@ -24,7 +24,7 @@ func createSprite override as Sprite
 	speed = rand.nextInt(2, 5)
 	var sb = String.append("t", rand.nextInt(1,2))
 	image1 = scene.createTextureForImageResource(sb)
-	frame1 = SpriteUtil.addTextureSpriteForSize(scene, layer, image1, 0.075 * width, 0.08 * height)
+	frame1 = SpriteUtil.addTextureSpriteForSize(scene, layer, image1, 0.075 * width, 0.075 * height)
 	x = rand.nextDouble() * ((width - frame1.getWidth()) * 0.5)
 	y = rand.nextDouble() * height
 	frame1.move(x, y)
@@ -41,16 +41,16 @@ func tick(gameTime as TimeValue, delta as double) override
 {
 	base.tick(gameTime, delta)
 	player = gameScene.getCharacter()
-	radius = (player.getWidth() * 0.5) + (frame1.getHeight() * 0.5)
-	x += ((frame1.getWidth()) * delta * 0.5) / speed
-	frame1.move(x, y)
-	dx = (player.getX() + (player.getWidth() * 0.5)) - (frame1.getX() + (frame1.getWidth() * 0.5))
-	dy = (player.getY() + (player.getHeight() * 0.5)) - (frame1.getY() + (frame1.getHeight() * 0.5))
+	radius = (player.getWidth() * 0.5) + (sprite.getHeight() * 0.5)
+	x += ((sprite.getWidth()) * delta * 0.5) / speed
+	sprite.move(x, y)
+	dx = (player.getX() + (player.getWidth() * 0.5)) - (sprite.getX() + (sprite.getWidth() * 0.5))
+	dy = (player.getY() + (player.getHeight() * 0.5)) - (sprite.getY() + (sprite.getHeight() * 0.5))
 	currentRadius  = Math.sqrt( dx * dx + dy * dy)
-	if(radius = currentRadius) {
+	if(radius > currentRadius) {
 		PRINT("score")
 		gameScene.onTimeToPlaySoundClip()
-		gameScene.removeSprite(frame1)
+		gameScene.removeSprite(sprite)
 		gameScene.addScore(points)
 	}
 }

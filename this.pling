@@ -1,0 +1,19 @@
+title = "fishattack"
+description = "this is a longer description about my program"
+copyright = "Copyright (c) Test Program"
+license = "All Rights Reserved"
+version = "1.0.x"
+vendorId = "com.day3activity1"
+resources = [
+	"images",
+	"sounds"
+]
+depends = [
+	"cape",
+	"cave",
+	"motion"
+]
+preFilters += "@motion"
+compilerOptions = {
+	"html5.readableCode" : "true"
+}
