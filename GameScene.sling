@@ -24,8 +24,8 @@ func initialize override
 		clip = audioManager.getClipForResource("collide")
 	}
 	if(stream != null) {
-		//stream.play()
-		//stream.setLooping(true)
+		stream.play()
+		stream.setLooping(true)
 	}
 	addTextureSpriteForSize(createTextureForImageResource("background"), getReferenceWidth(), getReferenceHeight())
 	height = getReferenceHeight()
@@ -45,11 +45,11 @@ func initialize override
 	})
 	var textProp =  TextProperties.forText("Score Here")
 	textProp.setTextColor(Color.white())
-	textProp.setFontSizeRelative(0.1 * height)
+	textProp.setFontSizeRelative(0.05 * height)
 	textProp.setFontFamily("Times New Roman")
 	textProp.setFontIsItalic(true)
 	text = addTextSprite(textProp)
-	text.move(0.0, getReferenceHeight() - text.getHeight())
+	text.move(0, 0.005 * height)
 }
 
 func cleanup override
@@ -105,7 +105,7 @@ func quitGame
 func gameOver
 {
 	popScene()
-	//stream.stop()
+	stream.stop()
 }
 
 func addScore(point as int)

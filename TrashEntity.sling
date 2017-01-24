@@ -24,7 +24,7 @@ func createSprite override as Sprite
 	speed = rand.nextInt(2, 5)
 	var sb = String.append("t", rand.nextInt(1,2))
 	image1 = scene.createTextureForImageResource(sb)
-	frame1 = SpriteUtil.addTextureSpriteForSize(scene, layer, image1, 0.075 * width, 0.075 * height)
+	frame1 = SpriteUtil.addTextureSpriteForSize(scene, layer, image1, 0.075 * width, 0.08 * height)
 	x = rand.nextDouble() * ((width - frame1.getWidth()) * 0.5)
 	y = rand.nextDouble() * height
 	frame1.move(x, y)
@@ -47,7 +47,7 @@ func tick(gameTime as TimeValue, delta as double) override
 	dx = (player.getX() + (player.getWidth() * 0.5)) - (frame1.getX() + (frame1.getWidth() * 0.5))
 	dy = (player.getY() + (player.getHeight() * 0.5)) - (frame1.getY() + (frame1.getHeight() * 0.5))
 	currentRadius  = Math.sqrt( dx * dx + dy * dy)
-	if(radius > currentRadius) {
+	if(radius = currentRadius) {
 		PRINT("score")
 		gameScene.onTimeToPlaySoundClip()
 		gameScene.removeSprite(frame1)
