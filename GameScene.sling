@@ -1,0 +1,128 @@
+class is SpriteSceneWithEntities imports cape imports cave imports motion:
+
+var tbe as TextButtonEntity
+var height as double
+var width as double
+var player as SpriteEntity
+var trash as SpriteEntity
+var fish as SpriteEntity
+var audioManager as AudioManager
+var stream as AudioStream
+var trashCount as int
+var fishCount as int
+var clip as AudioClip
+var text as TextSprite
+var score as int
+
+func initialize override
+{
+	base.initialize()
+	score = 0
+	audioManager = AudioManager.forApplication(context)
+	if(audioManager != null) {
+		stream = audioManager.getStreamForResource("background")
+		clip = audioManager.getClipForResource("collide")
+	}
+	if(stream != null) {
+		//stream.play()
+		//stream.setLooping(true)
+	}
+	addTextureSpriteForSize(createTextureForImageResource("background"), getReferenceWidth(), getReferenceHeight())
+	height = getReferenceHeight()
+	width = getReferenceWidth()
+	tbe = TextButtonEntity.forText("Quit")
+	tbe.setBackgroundColor(Color.white())
+	addEntity(tbe)
+	tbe.move(width - tbe.getWidth(), 0)
+	player = new SharkEntity()
+	trash = new TrashEntity()
+	fish = new FishEntity()
+	addEntity(player)
+	addEntity(trash)
+	addEntity(fish)
+	tbe.setClickHandler(func {
+		quitGame()
+	})
+	var textProp =  TextProperties.forText("Score Here")
+	textProp.setTextColor(Color.white())
+	textProp.setFontSizeRelative(0.1 * height)
+	textProp.setFontFamily("Times New Roman")
+	textProp.setFontIsItalic(true)
+	text = addTextSprite(textProp)
+	text.move(0.0, getReferenceHeight() - text.getHeight())
+}
+
+func cleanup override
+{
+	removeEntity(tbe)
+	removeAllSprites()
+	setBackgroundColor(Color.black())
+	clip.play()
+	stream.stop()
+}
+
+func onKeyEvent(event as KeyEvent) override
+{
+	base.onKeyEvent(event)
+	if(event.isKey(KeyEvent.KEY_BACKSPACE)) {
+		popScene()
+	}
+	else {
+		PRINT("Unhandled key event: `".. event.getStringValue() .. "'")
+	}
+}
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+	fishCount += 1
+	trashCount += 1
+	if(trashCount > 300) {
+		addEntity(trash = new TrashEntity())
+		trashCount = 0
+		PRINT("trash")
+	}
+	if(fishCount > 200) {
+		addEntity(fish = new FishEntity())
+		fishCount = 0
+		PRINT("fish")
+	}
+}
+
+func onTimeToPlaySoundClip
+{
+	if(audioManager != null){
+		clip.play()
+		PRINT("clipPlayed")
+	}
+}
+
+func quitGame
+{
+	popScene()
+}
+
+func gameOver
+{
+	popScene()
+	//stream.stop()
+}
+
+func addScore(point as int)
+{
+	score += point
+	PRINT(score)
+	text.setText(String.forInteger(score))
+}
+
+func subScore(point as int)
+{
+	score += point
+	PRINT(score)
+	text.setText(String.forInteger(score))
+}
+
+func getCharacter as SpriteEntity
+{
+	return player
+}

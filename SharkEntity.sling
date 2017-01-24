@@ -1,0 +1,77 @@
+class is SpriteEntity is PointerListener imports cave imports cape imports motion:
+
+var frame1 as TextureSprite
+var scene as GameScene
+var height as double
+var width as double
+var x as double
+var y as double
+var eventX as double
+var eventY as double
+var image1 as Texture
+var isPressed = false
+var life as int
+var count as int
+var lifebar as TextureSprite
+var lifecolor as Texture
+
+func createSprite override as Sprite
+{
+	life = 20
+	scene = getScene() as GameScene
+	height = scene.getReferenceHeight()
+	width = scene.getReferenceWidth()
+	image1 = scene.createTextureForImageResource("shark")
+	frame1 = scene.addTextureSpriteForSize(image1, 0.2 * width, 0.2 * height)
+	frame1.move(width - frame1.getWidth(), 0.5 * (height - frame1.getHeight()))
+	lifecolor = scene.createTextureForColor(Color.forRGB(0, 255, 0))
+	lifebar = scene.addTextureSpriteForSize(lifecolor, (life / 100) * width, 0.025 * height)
+	lifebar.move((width - lifebar.getWidth()) * 0.5, 0.005 * height)
+	return frame1
+}
+
+func cleanup override
+{
+	base.cleanup()
+	scene.removeAllSprites()
+}
+
+func onPointerEvent(event as PointerEvent) as bool
+{
+	if(event.isConsumed) {
+		return false
+	}
+	if(event.action == PointerEvent.DOWN) {
+		isPressed = true
+		//frame1.move(frame1.getX(),frame1.getY())
+	}
+	if(event.action == PointerEvent.UP) {
+		isPressed = false
+		//frame1.move(frame1.getX(),frame1.getY())
+	}
+	if(event.action == PointerEvent.MOVE) {
+		eventX = event.getX()
+		eventY = event.getY()
+	}
+	return false
+}
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+	count += 1
+	x -= (frame1.getX() - eventX) * 0.1
+	y -= (frame1.getY() - eventY) * 0.1
+	lifebar.setTextureWithSize(scene.createTextureForColor(Color.forRGB(0, 255, 0)), (life / 100) * width, 0.025 * height)
+	if(isPressed) {
+		frame1.move(x, y)
+	}
+	if(count > 500) {
+		life -= 1
+		count = 0
+		PRINT(life)
+	}
+	if(life < 1) {
+		scene.quitGame()
+	}
+}

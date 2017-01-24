@@ -1,0 +1,56 @@
+class is SpriteEntity imports cave imports cape imports motion:
+
+var frame1 as TextureSprite
+var gameScene as GameScene
+var player as SpriteEntity
+var height as double
+var width as double
+var x as double
+var y as double
+var image1 as Texture
+var radius as double
+var dx as double
+var dy as double
+var currentRadius as double
+var speed as int
+var points = 1
+
+func createSprite override as Sprite
+{
+	var rand = new Random()
+	gameScene = getScene() as GameScene
+	height = layer.getReferenceHeight()
+	width = layer.getReferenceWidth()
+	speed = rand.nextInt(5, 10)
+	var sb = String.append("f", rand.nextInt(3, 4))
+	image1 = scene.createTextureForImageResource(sb)
+	frame1 = SpriteUtil.addTextureSpriteForSize(scene, layer, image1, 0.05 * width, 0.05 * height)
+	x = rand.nextDouble() * ((width - frame1.getWidth()) * 0.5)
+	y = rand.nextDouble() * height
+	frame1.move(x, y)
+	return frame1
+}
+
+func cleanup override
+{
+	base.cleanup()
+	gameScene.removeAllSprites()
+}
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+	player = gameScene.getCharacter()
+	radius = (player.getWidth() * 0.5) + (frame1.getHeight() * 0.5)
+	x += ((frame1.getWidth()) * delta * 0.5) / speed
+	frame1.move(x, y)
+	dx = (player.getX() + (player.getWidth() * 0.5)) - (frame1.getX() + (frame1.getWidth() * 0.5))
+	dy = (player.getY() + (player.getHeight() * 0.5)) - (frame1.getY() + (frame1.getHeight() * 0.5))
+	currentRadius  = Math.sqrt( dx * dx + dy * dy)
+	if(radius > currentRadius) {
+		PRINT("score")
+		gameScene.onTimeToPlaySoundClip()
+		gameScene.removeSprite(frame1)
+		gameScene.addScore(points)
+	}
+}
